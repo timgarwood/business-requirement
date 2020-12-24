@@ -20,7 +20,19 @@ export default class SignUpService {
             });
     }
 
-    getAllUsers = () => {
-        return [];
+    getAllUsers = (callback) => {
+        axios.get(`${this.url}/signup`)
+            .then(response => {
+                callback({
+                    err: null,
+                    response: response
+                });
+            })
+            .catch(err => {
+                callback({
+                    err: err,
+                    response: null
+                });
+            });
     }
 }

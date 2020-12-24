@@ -4,6 +4,7 @@ import './App.css'
 import 'bootstrap/dist/css/bootstrap.css';
 import spyLogo from './images/spy.jpg';
 import SignUpService from './services/SignUpService';
+import SpyListComponent from './components/SpyList/SpyListComponent';
 
 export default class App extends Component {
     nameRef = null;
@@ -16,7 +17,9 @@ export default class App extends Component {
         gettingUsers: false,
         signUpError: null,
         signUpSuccess: false,
-        signUpEnabled: false
+        signUpEnabled: false,
+        refreshSpiesError: false,
+        spyList: []
     };
 
     constructor() {
@@ -41,7 +44,16 @@ export default class App extends Component {
 
     refreshSpies = () => {
         this.service.getAllUsers((data) => {
-
+            console.log(JSON.stringify(data));
+            if (data.err) {
+                this.setState({
+                    refreshSpiesError: data.err,
+                });
+            } else {
+                this.setState({
+                    spyList: data.response.data.rows
+                })
+            }
         });
     }
 
@@ -137,6 +149,7 @@ export default class App extends Component {
     render() {
         let errorDiv = null;
         let successDiv = null;
+        let spyListComponent = null;
         if (this.state.signUpError) {
             errorDiv = (
                 <div className="alert alert-danger">
@@ -150,6 +163,13 @@ export default class App extends Component {
                 <div className="alert alert-success">
                     Thanks! You're signed up now.
                 </div>
+            )
+        }
+
+        if (this.state.spyList) {
+            spyListComponent = (
+                <SpyListComponent spyList={this.state.spyList}>
+                </SpyListComponent>
             )
         }
 
@@ -178,41 +198,43 @@ export default class App extends Component {
 
                 <div className="row" style={{ marginTop: "10px" }}>
                     <div className="col-sm">
-                        <div className="col-sm" style={{ borderStyle: "solid" }}>
+                        <p>
+                            <input id="fileUploader"
+                                type="file" onChange={this.photoChanged}>
+                            </input>
+                        </p>
+                        <p>
+                            <img id="photo"
+                                width="200px"
+                                height="200px"
+                                src=""
+                                alt="Select a photo"></img>
+                        </p>
+                        <p>
+
                             <label htmlFor="name">Name: </label>
                             <input id="name"
                                 onClick={this.setRefToName}
                                 type="text"
-                                style={{ display: "inline" }}
                                 ref={this.nameRef}>
                             </input>
+                        </p>
+                        <p>
                             <label htmlFor="email">Email: </label>
                             <input id="email"
                                 onClick={this.setRefToEmail}
                                 type="text"
-                                style={{ display: "inline" }}
                                 ref={this.emailRef}>
                             </input>
+                        </p>
+                        <p>
                             <label htmlFor="age">Age: </label>
                             <input id="age"
                                 onClick={this.setRefToAge}
                                 type="number"
-                                style={{ display: "inline" }}
                                 ref={this.ageRef}>
                             </input>
-                        </div>
-                        <div className="col-sm" style={{ borderStyle: "solid" }}>
-                            <p>
-                                <input id="fileUploader"
-                                    type="file" onChange={this.photoChanged}>
-                                </input>
-                                <img id="photo"
-                                    width="200px"
-                                    height="200px"
-                                    src=""
-                                    alt="Select a photo"></img>
-                            </p>
-                        </div>
+                        </p>
                         <KeyboardComponent
                             backClicked={this.backClicked}
                             keyClicked={this.keyClicked}>
@@ -231,7 +253,7 @@ export default class App extends Component {
                                     className="btn btn-success">Click to see spies!</button>
                             </div>
                         </div>
-                        slkdjflaskdfjalkdj
+                        {spyListComponent}
                     </div>
                 </div>
             </div >
