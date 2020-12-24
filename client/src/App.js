@@ -17,10 +17,10 @@ export default class App extends Component {
         signUpError: null,
         signUpSuccess: false,
         signUpEnabled: false,
-        refreshSpiesError: false,
+        refreshSpiesError: null,
         photoFile: null,
         photoUrl: "",
-        spyList: []
+        spyList: null
     };
 
     constructor() {
@@ -49,10 +49,12 @@ export default class App extends Component {
             if (data.err) {
                 this.setState({
                     refreshSpiesError: data.err,
+                    spyList: null
                 });
             } else {
                 this.setState({
-                    spyList: data.response.data.rows
+                    spyList: data.response.data.rows,
+                    refreshSpiesError: null
                 })
             }
         });
@@ -139,25 +141,33 @@ export default class App extends Component {
         let spyListComponent = null;
         if (this.state.signUpError) {
             errorDiv = (
-                <div className="alert alert-danger">
+                <div className="alert alert-danger" style={{ textAlign: "center" }}>
                     An error occurred: {this.state.signUpError}
                 </div>
             );
-        }
-
-        if (this.state.signUpSuccess) {
+        } else if (this.state.signUpSuccess) {
             successDiv = (
-                <div className="alert alert-success">
+                <div className="alert alert-success" style={{ textAlign: "center" }}>
                     Thanks! You're signed up now.
                 </div>
             )
         }
 
         if (this.state.spyList) {
+            if (this.state.spyList.length > 0) {
+                spyListComponent = (
+                    <SpyListComponent spyList={this.state.spyList}>
+                    </SpyListComponent>
+                )
+            } else {
+                spyListComponent = "There are no spies registered";
+            }
+        } else if (this.state.refreshSpiesError) {
             spyListComponent = (
-                <SpyListComponent spyList={this.state.spyList}>
-                </SpyListComponent>
-            )
+                <div className="row alert alert-danger">
+                    {this.state.refreshSpiesError}
+                </div>
+            );
         }
 
         return (
@@ -182,11 +192,18 @@ export default class App extends Component {
                         We can't let the hackers know who is joining our Spy Team.  Join the Spy Team using the built-in keyboard below!
                         </div>
                 </div>
+                <div className="row" style={{ marginTop: "50px" }}>
+                    <div className="col-sm" style={{ textAlign: "center" }}>
+                        {errorDiv}
+                        {successDiv}
+                    </div>
+                </div>
+
 
                 <div className="row" style={{ marginTop: "10px" }}>
                     <div className="col-sm">
                         <p>
-                            <input type="file" onChange={this.photoChanged}>
+                            <input type="file" accept="image/*" onChange={this.photoChanged}>
                             </input>
                         </p>
                         <p>
@@ -225,15 +242,15 @@ export default class App extends Component {
                             keyClicked={this.keyClicked}>
                         </KeyboardComponent>
                         <button onClick={this.signUpClicked}
+                            style={{ marginTop: "20px" }}
                             disabled={!this.state.signUpEnabled}
                             className="btn btn-success">Sign Up</button>
 
-                        {errorDiv}
-                        {successDiv}
                     </div>
-                    <div className="col-md-6" style={{ borderStyle: "solid", borderWidth: "2px" }}>
+                    <div className="col-md-6">
                         <div className="row">
-                            <div className="col-sm" style={{ textAlign: "center" }}>
+                            <div className="col-sm"
+                                style={{ textAlign: "center", marginBottom: "20px" }}>
                                 <button onClick={this.refreshSpies}
                                     className="btn btn-success">Click to see spies!</button>
                             </div>

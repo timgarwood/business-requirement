@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import SpyComponent from './SpyComponent'
+import './SpyListComponent.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 export default class SpyListComponent extends Component {
@@ -15,7 +16,7 @@ export default class SpyListComponent extends Component {
         });
 
         return (
-            <div>
+            <div className="SpyListComponent">
                 {comps}
             </div>
         )

@@ -23,9 +23,13 @@ export default class SignUpService {
                 });
             })
             .catch(err => {
-                console.log(JSON.stringify(err));
+                let error = null;
+                if (err.response) {
+                    error = err.response.data;
+                }
+
                 callback({
-                    err: err,
+                    err: error.err,
                     response: null
                 });
             });
@@ -40,8 +44,13 @@ export default class SignUpService {
                 });
             })
             .catch(err => {
+                let error = null;
+                if (err.response) {
+                    error = err.response.data;
+                }
+
                 callback({
-                    err: err,
+                    err: error.err,
                     response: null
                 });
             });
