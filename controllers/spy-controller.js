@@ -40,9 +40,8 @@ module.exports = {
 
         if (!request.files) {
             return response.status(400)
-                .send({ err: 'Photo file required' });
+                .send({ err: 'A photo is required' });
         }
-
 
         const photoPath = `${uuidv4()}`;
         request.files.file.mv(path.join('public', photoPath), (err) => {

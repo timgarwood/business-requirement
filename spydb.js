@@ -2,11 +2,12 @@ var sqlite = require('sqlite3');
 
 var maxNameLength = 30;
 var maxEmailLength = 100;
+var minAge = 18;
 
 var db = new sqlite.Database('./spies.db', (err) => {
     if (!err) {
         db.serialize(() => {
-            db.run(`create table users(name varchar(${maxNameLength}), email varchar(${maxEmailLength}), photo TEXT, age int check(age >= 18))`, (err) => {
+            db.run(`create table users(name varchar(${maxNameLength}), email varchar(${maxEmailLength}), photo TEXT, age int check(age >= ${minAge}))`, (err) => {
                 //ignore errors if table already exists
             });
         })
@@ -27,5 +28,6 @@ module.exports = {
     },
 
     maxNameLength: maxNameLength,
-    maxEmailLength: maxNameLength
+    maxEmailLength: maxNameLength,
+    minAge: minAge
 }
