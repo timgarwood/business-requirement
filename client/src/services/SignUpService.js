@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 export default class SignUpService {
-    url = "http://localhost:5555/api";
 
     signUp = (name, emailAddress, age, photo, callback) => {
         let formData = new FormData();
@@ -15,7 +14,7 @@ export default class SignUpService {
             },
         };
 
-        axios.post(`${this.url}/signup`, formData, config)
+        axios.post(`${window.location.origin}/api/signup`, formData, config)
             .then(response => {
                 callback({
                     err: null,
@@ -36,7 +35,7 @@ export default class SignUpService {
     }
 
     getAllUsers = (callback) => {
-        axios.get(`${this.url}/signup`)
+        axios.get(`${window.location.origin}/api/signup`)
             .then(response => {
                 callback({
                     err: null,
