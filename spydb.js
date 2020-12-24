@@ -6,7 +6,7 @@ var maxEmailLength = 100;
 var db = new sqlite.Database('./spies.db', (err) => {
     if (!err) {
         db.serialize(() => {
-            db.run(`create table users(name varchar(${maxNameLength}), email varchar(${maxEmailLength}), age int check(age >= 18))`, (err) => {
+            db.run(`create table users(name varchar(${maxNameLength}), email varchar(${maxEmailLength}), photo TEXT, age int check(age >= 18))`, (err) => {
                 //ignore errors if table already exists
             });
         })
@@ -15,7 +15,7 @@ var db = new sqlite.Database('./spies.db', (err) => {
 
 module.exports = {
     createUser: function (name, emailAddress, age, photo, callback) {
-        db.run(`insert into users ([name],[email],[age]) values(\"${name}\", \"${emailAddress}\", ${age})`, (err) => {
+        db.run(`insert into users ([name],[email],[photo], [age]) values(\"${name}\", \"${emailAddress}\", \"${photo}\", ${age})`, (err) => {
             callback(err);
         });
     },

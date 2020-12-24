@@ -1,0 +1,22 @@
+.KeyComponent {
+    background: black;
+    color: lime;
+    padding: 3px;
+    width: 30px;
+    height: 30px;
+    margin: 2px;
+    font-weight: bold;
+    text-align: center;
+
+    border-style: solid;
+    border-color: lime;
+    border-width: 2px;
+    border-radius: 2px;
+}
+
+.KeyComponent:hover {
+    background-color: lime;
+    color: black;
+    border-color: lime;
+    cursor: pointer;
+}
