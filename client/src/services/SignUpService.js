@@ -4,7 +4,18 @@ export default class SignUpService {
     url = "http://localhost:5555/api";
 
     signUp = (name, emailAddress, age, photo, callback) => {
-        axios.post(`${this.url}/signup`, { name, emailAddress, age, photo })
+        let formData = new FormData();
+        formData.append('file', photo);
+        formData.append('name', name);
+        formData.append('emailAddress', emailAddress);
+        formData.append('age', age);
+        const config = {
+            headers: {
+                'content-type': 'multipart/form-data'
+            },
+        };
+
+        axios.post(`${this.url}/signup`, formData, config)
             .then(response => {
                 callback({
                     err: null,

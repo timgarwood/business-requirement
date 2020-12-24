@@ -1,10 +1,12 @@
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
+
 module.exports = {
     createNewUser: function (db, request, response) {
         if (!request.body ||
             !request.body.name ||
             !request.body.emailAddress ||
-            !request.body.age ||
-            !request.body.photo) {
+            !request.body.age) {
             return response.sendStatus(400);
         }
 
@@ -22,11 +24,18 @@ module.exports = {
             return response.sendStatus(400);
         }
 
-        db.createUser(request.body.name, request.body.emailAddress, request.body.age, request.body.photo, (err) => {
+        const photoPath = `${uuidv4()}`;
+        request.files.file.mv(path.join('public', photoPath), (err) => {
             if (err) {
-                response.sendStatus(500);
+                return response.sendStatus(500);
             } else {
-                response.sendStatus(200);
+                db.createUser(request.body.name, request.body.emailAddress, request.body.age, photoPath, (err) => {
+                    if (err) {
+                        response.sendStatus(500);
+                    } else {
+                        response.sendStatus(200);
+                    }
+                });
             }
         });
     },

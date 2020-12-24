@@ -10,7 +10,6 @@ export default class App extends Component {
     nameRef = null;
     emailRef = null;
     ageRef = null;
-    photoEncoding = "";
 
     state = {
         signingUp: false,
@@ -19,6 +18,8 @@ export default class App extends Component {
         signUpSuccess: false,
         signUpEnabled: false,
         refreshSpiesError: false,
+        photoFile: null,
+        photoUrl: "",
         spyList: []
     };
 
@@ -80,7 +81,7 @@ export default class App extends Component {
         this.service.signUp(this.nameRef.current.value,
             this.emailRef.current.value,
             this.ageRef.current.value,
-            this.photoEncoding,
+            this.state.photoFile,
             this.signUpCompleted);
     }
 
@@ -95,11 +96,10 @@ export default class App extends Component {
             this.nameRef.current.value = "";
             this.emailRef.current.value = "";
             this.ageRef.current.value = "";
-            this.photoEncoding = "";
-            const photo = document.getElementById('photo');
-            photo.src = "";
 
             this.setState({
+                photoFile: null,
+                photoUrl: "",
                 signUpError: null,
                 signUpSuccess: true,
                 signUpEnabled: this.isSignUpButtonEnabled()
@@ -111,7 +111,7 @@ export default class App extends Component {
         return this.nameRef.current.value.length > 0 &&
             this.emailRef.current.value.length > 0 &&
             this.ageRef.current.value.length > 0 &&
-            this.photoEncoding.length > 0;
+            this.state.photoUrl.length > 0;
     }
 
     setRefToName = () => {
@@ -126,24 +126,11 @@ export default class App extends Component {
         this.currentRef = this.ageRef;
     }
 
-    photoChanged = () => {
-        const photo = document.getElementById('photo');
-        const file = document.getElementById('fileUploader').files[0];
-        const reader = new FileReader();
-        const self = this;
-
-        reader.addEventListener("load", function () {
-            // convert image file to base64 string
-            photo.src = reader.result;
-            self.photoEncoding = reader.result;
-            self.setState({
-                signUpEnabled: self.isSignUpButtonEnabled()
-            });
-        }, false);
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
+    photoChanged = (e) => {
+        this.setState({
+            photoFile: e.target.files[0],
+            photoUrl: URL.createObjectURL(e.target.files[0])
+        });
     }
 
     render() {
@@ -199,15 +186,13 @@ export default class App extends Component {
                 <div className="row" style={{ marginTop: "10px" }}>
                     <div className="col-sm">
                         <p>
-                            <input id="fileUploader"
-                                type="file" onChange={this.photoChanged}>
+                            <input type="file" onChange={this.photoChanged}>
                             </input>
                         </p>
                         <p>
-                            <img id="photo"
-                                width="200px"
+                            <img width="200px"
                                 height="200px"
-                                src=""
+                                src={this.state.photoUrl}
                                 alt="Select a photo"></img>
                         </p>
                         <p>

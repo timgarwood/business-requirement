@@ -17,6 +17,7 @@
     "babel-loader": "^8.2.2",
     "bootstrap": "^4.5.3",
     "css-loader": "^5.0.1",
+    "express-fileupload": "^1.2.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
     "json-loader": "^0.5.7",
