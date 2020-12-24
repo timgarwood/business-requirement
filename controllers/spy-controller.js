@@ -7,33 +7,56 @@ module.exports = {
             !request.body.name ||
             !request.body.emailAddress ||
             !request.body.age) {
-            return response.sendStatus(400);
+            return response.status(400)
+                .send({ err: 'Invalid request body' });
         }
 
         const emailRegex = /^[\w\.]+@[\w\.]+\.[\w\.]+/;
 
         if (!emailRegex.test(request.body.emailAddress)) {
-            return response.sendStatus(400);
+            return response.status(400)
+                .send({ err: 'Invalid email address' });
         }
 
         if (request.body.name.length > db.maxNameLength) {
-            return response.sendStatus(400);
+            return response.status(400)
+                .send({ err: `Name cannot exceed ${db.maxNameLength} characters` });
         }
 
         if (request.body.emailAddress.length > db.maxEmailLength) {
-            return response.sendStatus(400);
+            return response.status(400)
+                .send({ err: `Email cannot exceed ${db.maxEmailLength} characters` });
         }
+
+        if (isNaN(parseInt(request.body.age))) {
+            return response.status(400)
+                .send({ err: `Invalid age` });
+        }
+
+        if (parseInt(request.body.age) < db.minAge) {
+            return response.status(400)
+                .send({ err: `Must be at least ${db.minAge} years old` });
+        }
+
+        if (!request.files) {
+            return response.status(400)
+                .send({ err: 'Photo file required' });
+        }
+
 
         const photoPath = `${uuidv4()}`;
         request.files.file.mv(path.join('public', photoPath), (err) => {
             if (err) {
-                return response.sendStatus(500);
+                return response.status(500)
+                    .send({ err: 'An error occurred while saving your photo' });
             } else {
                 db.createUser(request.body.name, request.body.emailAddress, request.body.age, photoPath, (err) => {
                     if (err) {
-                        response.sendStatus(500);
+                        return response.status(500)
+                            .send({ err: 'An error occurred during sign up' })
                     } else {
-                        response.sendStatus(200);
+                        return response.status(200)
+                            .send();
                     }
                 });
             }
@@ -43,20 +66,11 @@ module.exports = {
     getAllUsers: function (db, request, response) {
         db.getAllUsers((err, rows) => {
             if (err) {
-                response.sendStatus(500);
+                response.status(500)
+                    .send({ err: 'An error occurred retrieving the users' })
             } else {
-                response.json({ rows: rows });
+                response.send({ rows: rows });
             }
         });
-    },
-
-    getAllSkills: function (request, response) {
-        db.getAllSkills((err, rows) => {
-            if (err) {
-                response.sendStatus(500);
-            } else {
-                response.json({ rows: rows });
-            }
-        })
     }
 }
