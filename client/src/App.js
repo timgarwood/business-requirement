@@ -6,14 +6,14 @@ import spyLogo from './images/spy.jpg';
 import SignUpService from './services/SignUpService';
 import SpyListComponent from './components/SpyList/SpyListComponent';
 
+/***
+ * This is the main react component for rendering the sign up form
+ * and rendering the list of signed up users
+ * @class 
+ */
 export default class App extends Component {
-    nameRef = null;
-    emailRef = null;
-    ageRef = null;
-
+    // component state object
     state = {
-        signingUp: false,
-        gettingUsers: false,
         signUpError: null,
         signUpSuccess: false,
         signUpEnabled: false,
@@ -23,9 +23,15 @@ export default class App extends Component {
         spyList: null
     };
 
+    /***
+     * Construct a new App
+     * @constructor 
+     */
     constructor() {
         super();
 
+        // references to the 3 input fields so that they can be
+        // manipulated from within this component
         this.nameRef = React.createRef();
         this.emailRef = React.createRef();
         this.ageRef = React.createRef();
@@ -33,25 +39,37 @@ export default class App extends Component {
         this.service = new SignUpService();
     }
 
+    /***
+     * Handle a character being clicked on the keyboard
+     * @param {char} character
+     */
     keyClicked = (character) => {
+        // append the character to the current input reference
         if (this.currentRef) {
             this.currentRef.current.value += character;
         }
 
+        // update the sign up button
         this.setState({
             signUpEnabled: this.isSignUpButtonEnabled()
         })
     }
 
+    /***
+     * Handle a request to refresh the list of spies
+     */
     refreshSpies = () => {
+        // query users from the service
         this.service.getAllUsers((data) => {
-            console.log(JSON.stringify(data));
+            // if there was an error on the query, update the state
+            // to display the error
             if (data.err) {
                 this.setState({
                     refreshSpiesError: data.err,
                     spyList: null
                 });
             } else {
+                // update the spy list to contain the data from the server
                 this.setState({
                     spyList: data.response.data.rows,
                     refreshSpiesError: null
@@ -60,26 +78,37 @@ export default class App extends Component {
         });
     }
 
+    /***
+     * Handle the backspace button being clicked
+     * @param {char} character
+     */
     backClicked = (character) => {
         if (this.currentRef) {
+            // if there is a selected input, remove the last character from that input
             if (this.currentRef.current.value &&
                 this.currentRef.current.value.length > 0) {
                 this.currentRef.current.value = this.currentRef.current.value.slice(0, this.currentRef.current.value.length - 1);
             }
         }
 
+        // update the sign up button state
         this.setState({
             signUpEnabled: this.isSignUpButtonEnabled()
         })
     }
 
+    /***
+     * Handle the user clicking the Sign Up button
+     * @param {object} evt
+     */
     signUpClicked = (evt) => {
+        // clear our sign up states
         this.setState({
-            signingUp: true,
             signUpError: null,
             signUpSuccess: false
         });
 
+        // send sign up reques to the service
         this.service.signUp(this.nameRef.current.value,
             this.emailRef.current.value,
             this.ageRef.current.value,
@@ -87,18 +116,27 @@ export default class App extends Component {
             this.signUpCompleted);
     }
 
+    /***
+     * Callback when the server responds to the sign up request
+     * @param {object} data
+     */
     signUpCompleted = (data) => {
         if (data.err) {
+            // display the sign up error message
             this.setState({
                 signUpError: data.err,
                 signUpSuccess: false,
                 signUpEnabled: this.isSignUpButtonEnabled()
             });
         } else {
+            // sign up was successful
+
+            // clear the input states
             this.nameRef.current.value = "";
             this.emailRef.current.value = "";
             this.ageRef.current.value = "";
 
+            // reset internal state
             this.setState({
                 photoFile: null,
                 photoUrl: "",
@@ -109,32 +147,53 @@ export default class App extends Component {
         }
     }
 
+    /***
+     * Method to determine if the sign up button should be enabled
+     */
     isSignUpButtonEnabled = () => {
+        // sign up button is enabled if all fields have data
+        // and a photo has been selected 
         return this.nameRef.current.value.length > 0 &&
             this.emailRef.current.value.length > 0 &&
             this.ageRef.current.value.length > 0 &&
             this.state.photoUrl.length > 0;
     }
 
+    /***
+     * Point the current input reference to the name input field
+     */
     setRefToName = () => {
         this.currentRef = this.nameRef;
     }
 
+    /***
+     * Point the current input reference to the email input field
+     */
     setRefToEmail = () => {
         this.currentRef = this.emailRef;
     }
 
+    /***
+     * Point the current input reference to the age input field
+     */
     setRefToAge = () => {
         this.currentRef = this.ageRef;
     }
 
+    /***
+     * Callback for when the user selects a new photo
+     */
     photoChanged = (e) => {
         this.setState({
             photoFile: e.target.files[0],
-            photoUrl: URL.createObjectURL(e.target.files[0])
+            photoUrl: URL.createObjectURL(e.target.files[0]),
+            signUpEnabled: this.isSignUpButtonEnabled()
         });
     }
 
+    /***
+     * render this component
+     */
     render() {
         let errorDiv = null;
         let successDiv = null;

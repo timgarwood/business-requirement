@@ -95,7 +95,7 @@ describe('Spy Controller Tests', () => {
             status: sinon.spy()
         };
 
-        controller.getAllUsers(db, request, response);
+        controller.getAllUsers(db, response);
 
         expect(db.getAllUsers.calledOnce).to.be.true;
         expect(response.status.calledOnce).to.be.false;
@@ -404,7 +404,7 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.getAllUsers(db, request, stub);
+        controller.getAllUsers(db, stub);
 
         expect(db.getAllUsers.calledOnce).to.be.true;
         expect(stub.status.calledOnce).to.be.false;
