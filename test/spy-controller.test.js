@@ -388,6 +388,26 @@ describe('Spy Controller Tests', () => {
         expect(stub.send.firstCall.args[0].err).to.be.equal('A photo is required');
     });
 
+    it('should return 400 when file is too large', () => {
+        let request = {
+            body: {
+                name: 'Tim',
+                emailAddress: 'tim@mail.com',
+                age: 35
+            },
+            files: {
+                file: {
+                    truncated: true
+                }
+            }
+        };
+
+        let response = {
+            send: sinon.spy(),
+            status: sinon.spy()
+        };
+    });
+
 
     it('should return 500 on GET error', () => {
         const db = {
