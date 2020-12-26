@@ -11,7 +11,6 @@ The application is a NodeJS server with a React frontend. To build the applicati
 3. In the ./client/build directory, run: ```npm install```
 4. In the ./client/build directory, run: ```npm run build```
 5. Finally, to run the server and have it serve the React client run the following command in the workspace root: ```npm start```
-6. The NodeJS server is set to run on port 5555
 
 # Unit Tests
 In the workspace root, run ```npm run tests```
@@ -20,6 +19,7 @@ In the workspace root, run ```npm run tests```
 You can build a docker container of this application with the following steps:
 1. In the workspace root, run ```docker build -t spyteam .```
 2. In the workspace root, run ```docker run -p 49160:5555 -d spyteam```
+3. The NodeJS is set to run on port 5555 by default. If you pass in your own port number to NodeJS, be sure to update the port exposed in the Dockerfile to match.
 
 # Swagger documentation
 Swagger documentation is generated at runtime by swagger-jsdoc (http://www.github.com/Surnet/swagger-jsdoc).
