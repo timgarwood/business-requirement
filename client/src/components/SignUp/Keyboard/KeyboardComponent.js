@@ -16,25 +16,36 @@ export default class KeyboardComponent extends Component {
     render() {
         // map each key in the keyboard json data
         // to a KeyComponent
-        let comps = keyObj.keys.map(character => {
+        let rows = keyObj.keyRows.map(row => {
+            let keyComps = [];
+            for (var i = 0; i < row.keys.length; ++i) {
+                const character = row.keys.charAt(i);
+                keyComps.push(
+                    <KeyComponent key={character}
+                        clicked={this.props.keyClicked}
+                        keyCharacter={character} />);
+            }
+
+            if (row.back) {
+                // special handling for the 'backspace' button
+                keyComps.push((
+                    <KeyComponent
+                        key="back"
+                        clicked={this.props.backClicked}
+                        keyCharacter="back"></KeyComponent>
+                ));
+            }
+
             return (
-                <KeyComponent key={character}
-                    clicked={this.props.keyClicked}
-                    keyCharacter={character} />
+                <ul className="KeyboardRowComponent">
+                    {keyComps}
+                </ul>
             )
         });
 
-        // special handling for the 'backspace' button
-        comps.push((
-            <KeyComponent style={{ width: "50px" }}
-                key="back"
-                clicked={this.props.backClicked}
-                keyCharacter="back"></KeyComponent>
-        ));
-
         return (
             <ul className="KeyboardComponent">
-                {comps}
+                {rows}
             </ul>
         )
     }

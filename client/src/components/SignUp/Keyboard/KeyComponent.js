@@ -12,8 +12,13 @@ export default class KeyComponent extends Component {
      */
     render() {
         // a key component is a simple <li> element with a click handler
+        let cssClass = "KeyComponent KeyComponent-normal";
+        if (this.props.keyCharacter === 'back') {
+            cssClass = "KeyComponent KeyComponent-backspace";
+        }
+
         return (
-            <li className="KeyComponent" onClick={() => this.props.clicked(this.props.keyCharacter)}>
+            <li className={cssClass} onClick={() => this.props.clicked(this.props.keyCharacter)}>
                 {this.props.keyCharacter}
             </li>
         )

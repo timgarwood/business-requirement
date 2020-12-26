@@ -2,7 +2,7 @@
   display: flex;
   flex-flow: row wrap;
   flex-grow: 0;
-  justify-content: space-around;
+  justify-content: center;
   border-style: solid;
   border-color: lime;
   border-width: 2px;
@@ -12,4 +12,12 @@
   list-style: none;
   background-color: black;
   width: 450px;
+}
+
+.KeyboardRowComponent {
+  list-style: none;
+  display: flex;
+  flex-grow: 0;
+  flex-flow: row wrap;
+  background-color: black;
 }

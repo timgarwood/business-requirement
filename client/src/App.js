@@ -18,7 +18,6 @@ export default class App extends Component {
         signUpSuccess: false,
         signUpEnabled: false,
         refreshSpiesError: null,
-        photoFile: null,
         photoUrl: "",
         spyList: null
     };
@@ -35,6 +34,7 @@ export default class App extends Component {
         this.nameRef = React.createRef();
         this.emailRef = React.createRef();
         this.ageRef = React.createRef();
+        this.photoFile = null;
         this.currentRef = null;
         this.service = new SignUpService();
     }
@@ -112,7 +112,7 @@ export default class App extends Component {
         this.service.signUp(this.nameRef.current.value,
             this.emailRef.current.value,
             this.ageRef.current.value,
-            this.state.photoFile,
+            this.photoFile,
             this.signUpCompleted);
     }
 
@@ -135,10 +135,10 @@ export default class App extends Component {
             this.nameRef.current.value = "";
             this.emailRef.current.value = "";
             this.ageRef.current.value = "";
+            this.photoFile = null;
 
             // reset internal state
             this.setState({
-                photoFile: null,
                 photoUrl: "",
                 signUpError: null,
                 signUpSuccess: true,
@@ -156,7 +156,7 @@ export default class App extends Component {
         return this.nameRef.current.value.length > 0 &&
             this.emailRef.current.value.length > 0 &&
             this.ageRef.current.value.length > 0 &&
-            this.state.photoUrl.length > 0;
+            this.photoFile;
     }
 
     /***
@@ -184,8 +184,8 @@ export default class App extends Component {
      * Callback for when the user selects a new photo
      */
     photoChanged = (e) => {
+        this.photoFile = e.target.files[0];
         this.setState({
-            photoFile: e.target.files[0],
             photoUrl: URL.createObjectURL(e.target.files[0]),
             signUpEnabled: this.isSignUpButtonEnabled()
         });
@@ -248,7 +248,7 @@ export default class App extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm" style={{ textAlign: "center" }}>
-                        We can't let the hackers know who is joining our Spy Team.  Join the Spy Team using the built-in keyboard below!
+                        We can't let the hackers know who is joining our Spy Team.  Join the Spy Team using the secure keyboard below!
                         </div>
                 </div>
                 <div className="row" style={{ marginTop: "50px" }}>
