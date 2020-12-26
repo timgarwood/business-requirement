@@ -1,6 +1,6 @@
 /**
  * This module implements a API controller for creating and retrieving
- * users who have signed up
+ * spies who have signed up
  * @author Tim Garwood
  * @module
  */
@@ -10,7 +10,7 @@ const path = require('path');
 
 module.exports = {
     /**
-     * Creates a new user using the body and photo file in the request object
+     * Creates a new spy using the body and photo file in the request object
      * Request must contain 3 parameters in the body: name, emailAddress and age
      * Request must also contain a photo file called 'file' 
      * Request header Content-Type must be 'multipart/form-data'
@@ -18,7 +18,7 @@ module.exports = {
      * @param {object} request the express request object
      * @param {object} response the express response object
      */
-    createNewUser: function (db, request, response) {
+    createNewSpy: function (db, request, response) {
         // check for invalid body
         if (!request.body ||
             !request.body.name ||
@@ -75,14 +75,14 @@ module.exports = {
                 return response.status(500)
                     .send({ err: 'An error occurred while saving your photo' });
             } else {
-                // add the user to the database
-                db.createUser(request.body.name, request.body.emailAddress, request.body.age, photoPath, (err) => {
+                // add the spy to the database
+                db.createSpy(request.body.name, request.body.emailAddress, request.body.age, photoPath, (err) => {
                     // check for error saving to database
                     if (err) {
                         return response.status(500)
                             .send({ err: 'An error occurred during sign up' })
                     } else {
-                        // user was added successfully
+                        // spy was added successfully
                         return response.status(200)
                             .send();
                     }
@@ -92,19 +92,19 @@ module.exports = {
     },
 
     /**
-     * Get all of the users who have signed up
+     * Get all of the spies who have signed up
      * @param {object} db the database wrapper object
      * @param {object} response the express response object
      */
-    getAllUsers: function (db, response) {
+    getAllSpies: function (db, response) {
         // query the database
-        db.getAllUsers((err, rows) => {
+        db.getAllSpies((err, rows) => {
             // check for error on query
             if (err) {
                 response.status(500)
-                    .send({ err: 'An error occurred retrieving the users' })
+                    .send({ err: 'An error occurred retrieving the spies' })
             } else {
-                // users queried successfully
+                // spies queried successfully
                 response.send({ rows: rows });
             }
         });

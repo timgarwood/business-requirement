@@ -36,7 +36,7 @@ const specs = swaggerJsDoc(options);
  * @swagger
  * tags:
  *  - name: signup
- *    description: endpoints related to signing up and retrieving users
+ *    description: endpoints related to signing up and retrieving spies
  */
 
 /** 
@@ -73,7 +73,7 @@ const specs = swaggerJsDoc(options);
  *                 description: file object containing a photo of the spy
  *     responses:
  *       200: 
- *         description:  The user was signed up successfully.
+ *         description:  The spy was signed up successfully.
  *       400:
  *         description:  There was an invalid input provided
  *         schema:
@@ -83,7 +83,7 @@ const specs = swaggerJsDoc(options);
  *               type: string
  *               description: A brief description of the error that occurred
  *       500:
- *         description:  An internal error occurred while signing up the user
+ *         description:  An internal error occurred while signing up the spy
  *         schema:
  *           type: object
  *           properties:
@@ -92,7 +92,7 @@ const specs = swaggerJsDoc(options);
  *               description: A brief description of the error that occurred
  *   get: 
  *     description: | 
- *       This endpoint will return the list of users who have signed up and a HTTP 200 status code if successful.
+ *       This endpoint will return the list of spies who have signed up and a HTTP 200 status code if successful.
  *       If unsuccessful, it will return a HTTP 500 status code and an error description
  *     tags: 
  *       - signup
@@ -100,7 +100,7 @@ const specs = swaggerJsDoc(options);
  *       - application/json 
  *     responses: 
  *       500:
- *         description: An internal error occurred while retrieving the users
+ *         description: An internal error occurred while retrieving the spy
  *         schema:
  *           type: object
  *           properties:
@@ -111,24 +111,24 @@ const specs = swaggerJsDoc(options);
  *         description: OK 
  *         schema: 
  *           type: object
- *           description: object containing the array of user entries
+ *           description: object containing the array of spy entries
  *           properties: 
  *             rows: 
  *               type: array
- *               description: the user entries
+ *               description: the spy entries
  *               items:
  *                 type: object
- *                 description: A user entry. 
+ *                 description: A spy entry. 
  *                 properties:
  *                   name:
  *                     type: string
- *                     description: name of the user
+ *                     description: name of the spy 
  *                   email:
  *                     type: string
- *                     description: email of the user
+ *                     description: email of the spy 
  *                   age:
  *                     type: number
- *                     description: age of the user
+ *                     description: age of the spy 
  *                   photo:
  *                     type: string
  *                     description:
@@ -159,10 +159,10 @@ app.use(fileUpload({
 }));
 
 app.post('/api/signup', (request, response) => {
-    controller.createNewUser(db, request, response)
+    controller.createNewSpy(db, request, response)
 });
 app.get('/api/signup', (request, response) => {
-    controller.getAllUsers(db, response);
+    controller.getAllSpies(db, response);
 });
 
 // serve the public and client/build directories

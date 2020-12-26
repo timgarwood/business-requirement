@@ -24,31 +24,31 @@ var db = new sqlite.Database('./spies.db', (err) => {
 
 module.exports = {
     /**
-     * Adds a new user to the database
+     * Adds a new spy to the database
      * @param {string} name 
      * @param {string} emailAddress 
      * @param {int} age 
      * @param {string} photo 
      * @param {function} callback 
      */
-    createUser: function (name, emailAddress, age, photo, callback) {
+    createSpy: function (name, emailAddress, age, photo, callback) {
         db.run(`insert into users ([name],[email],[photo], [age]) values(\"${name}\", \"${emailAddress}\", \"${photo}\", ${age})`, (err) => {
             callback(err);
         });
     },
 
     /**
-     * Get all users who have signed up
+     * Get all spies who have signed up
      * @param {function} callback 
      */
-    getAllUsers: function (callback) {
+    getAllSpies: function (callback) {
         db.all('select * from users', (err, rows) => {
             callback(err, rows);
         });
     },
 
     /**
-     * The maximum length allowed for a user name
+     * The maximum length allowed for a spy name
      */
     maxNameLength: maxNameLength,
     /**
