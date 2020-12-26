@@ -5,6 +5,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import spyLogo from './images/spy.jpg';
 import SignUpService from './services/SignUpService';
 import SpyListComponent from './components/SpyList/SpyListComponent';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 /***
  * This is the main react component for rendering the sign up form
@@ -14,6 +15,7 @@ import SpyListComponent from './components/SpyList/SpyListComponent';
 export default class App extends Component {
     // component state object
     state = {
+        loading: false,
         signUpError: null,
         signUpSuccess: false,
         signUpEnabled: false,
@@ -59,18 +61,24 @@ export default class App extends Component {
      * Handle a request to refresh the list of spies
      */
     refreshSpies = () => {
+        this.setState({
+            loading: true
+        });
+
         // query users from the service
         this.service.getAllUsers((data) => {
             // if there was an error on the query, update the state
             // to display the error
             if (data.err) {
                 this.setState({
+                    loading: false,
                     refreshSpiesError: data.err,
                     spyList: null
                 });
             } else {
                 // update the spy list to contain the data from the server
                 this.setState({
+                    loading: false,
                     spyList: data.response.data.rows,
                     refreshSpiesError: null
                 })
@@ -104,6 +112,7 @@ export default class App extends Component {
     signUpClicked = (evt) => {
         // clear our sign up states
         this.setState({
+            loading: true,
             signUpError: null,
             signUpSuccess: false
         });
@@ -124,6 +133,7 @@ export default class App extends Component {
         if (data.err) {
             // display the sign up error message
             this.setState({
+                loading: false,
                 signUpError: data.err,
                 signUpSuccess: false,
                 signUpEnabled: this.isSignUpButtonEnabled()
@@ -139,6 +149,7 @@ export default class App extends Component {
 
             // reset internal state
             this.setState({
+                loading: false,
                 photoUrl: "",
                 signUpError: null,
                 signUpSuccess: true,
@@ -195,18 +206,25 @@ export default class App extends Component {
      * render this component
      */
     render() {
-        let errorDiv = null;
-        let successDiv = null;
+        let statusDiv = null;
         let spyListComponent = null;
         let photoComponent = null;
-        if (this.state.signUpError) {
-            errorDiv = (
+        if (this.state.loading) {
+            statusDiv = (
+                <div style={{ textAlign: "center" }}>
+                    <p>Please wait</p>
+                    <ClipLoader color={"black"} size={75} loading={this.state.loading}></ClipLoader>
+                </div>
+            );
+        }
+        else if (this.state.signUpError) {
+            statusDiv = (
                 <div className="alert alert-danger" style={{ textAlign: "center" }}>
                     An error occurred: {this.state.signUpError}
                 </div>
             );
         } else if (this.state.signUpSuccess) {
-            successDiv = (
+            statusDiv = (
                 <div className="alert alert-success" style={{ textAlign: "center" }}>
                     Thanks! You're signed up now.
                 </div>
@@ -260,8 +278,7 @@ export default class App extends Component {
                 </div>
                 <div className="row" style={{ marginTop: "50px" }}>
                     <div className="col-sm" style={{ textAlign: "center" }}>
-                        {errorDiv}
-                        {successDiv}
+                        {statusDiv}
                     </div>
                 </div>
 
