@@ -198,6 +198,7 @@ export default class App extends Component {
         let errorDiv = null;
         let successDiv = null;
         let spyListComponent = null;
+        let photoComponent = null;
         if (this.state.signUpError) {
             errorDiv = (
                 <div className="alert alert-danger" style={{ textAlign: "center" }}>
@@ -229,6 +230,12 @@ export default class App extends Component {
             );
         }
 
+        if (this.state.photoUrl) {
+            photoComponent = <img src={this.state.photoUrl} width="200" height="200"></img>
+        } else {
+            photoComponent = <div style={{ width: "200", height: "200" }}></div>
+        }
+
         return (
             <div className="container">
                 <div className="row align-items-center">
@@ -248,7 +255,7 @@ export default class App extends Component {
                 </div>
                 <div className="row">
                     <div className="col-sm" style={{ textAlign: "center" }}>
-                        We can't let the hackers know who is joining our Spy Team.  Join the Spy Team using the secure keyboard below!
+                        We can't let the hackers know who is joining our Spy Team.  Fill out the form by clicking in a field and then using the secure keyboard below!
                         </div>
                 </div>
                 <div className="row" style={{ marginTop: "50px" }}>
@@ -261,41 +268,44 @@ export default class App extends Component {
 
                 <div className="row" style={{ marginTop: "10px" }}>
                     <div className="col-sm">
-                        <p>
-                            <input type="file" accept="image/*" onChange={this.photoChanged}>
+                        {photoComponent}
+                        <div class="input-group mb-3">
+                            <input
+                                onChange={this.photoChanged}
+                                type="file"
+                                accept="image/*"
+                                class="form-control">
                             </input>
-                        </p>
-                        <p>
-                            <img width="200px"
-                                height="200px"
-                                src={this.state.photoUrl}
-                                alt="Select a photo"></img>
-                        </p>
-                        <p>
+                        </div>
 
-                            <label htmlFor="name">Name: </label>
-                            <input id="name"
+                        <div class="input-group mb-3">
+                            <input ref={this.nameRef}
                                 onClick={this.setRefToName}
+                                readOnly="true"
                                 type="text"
-                                ref={this.nameRef}>
+                                class="form-control"
+                                placeholder="Name">
                             </input>
-                        </p>
-                        <p>
-                            <label htmlFor="email">Email: </label>
-                            <input id="email"
+                        </div>
+                        <div class="input-group mb-3">
+                            <input ref={this.emailRef}
                                 onClick={this.setRefToEmail}
+                                readOnly="true"
                                 type="text"
-                                ref={this.emailRef}>
+                                class="form-control"
+                                placeholder="Email@email.com">
                             </input>
-                        </p>
-                        <p>
-                            <label htmlFor="age">Age: </label>
-                            <input id="age"
+                        </div>
+                        <div class="input-group mb-3">
+                            <input ref={this.ageRef}
                                 onClick={this.setRefToAge}
+                                readOnly="true"
                                 type="number"
-                                ref={this.ageRef}>
+                                class="form-control"
+                                placeholder="35">
                             </input>
-                        </p>
+                            <span class="input-group-text">years old</span>
+                        </div>
                         <KeyboardComponent
                             backClicked={this.backClicked}
                             keyClicked={this.keyClicked}>
@@ -304,7 +314,6 @@ export default class App extends Component {
                             style={{ marginTop: "20px" }}
                             disabled={!this.state.signUpEnabled}
                             className="btn btn-success">Sign Up</button>
-
                     </div>
                     <div className="col-md-6">
                         <div className="row">
