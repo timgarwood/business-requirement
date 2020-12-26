@@ -15,6 +15,8 @@ const path = require('path');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 
+const port = process.env.PORT || 5555;
+
 const options = {
     swaggerDefinition: {
         openapi: "3.0.0",
@@ -23,7 +25,7 @@ const options = {
             version: '1.0.0',
             description: 'This is the API to sign up spies for the Spy Team app',
         },
-        host: "localhost:5555",
+        host: `localhost:${port}`,
         basePath: '/',
         schemes: ["http"]
     },
@@ -171,6 +173,6 @@ app.use(express.static(path.join(__dirname, 'client/build')));
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // run server
-server.listen(5555, function () {
-    console.log('server now listening on 5555');
+server.listen(port, function () {
+    console.log(`server now listening on ${port}`);
 });
