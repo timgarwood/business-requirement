@@ -389,6 +389,13 @@ describe('Spy Controller Tests', () => {
     });
 
     it('should return 400 when file is too large', () => {
+        let db = {
+            createSpy: sinon.spy(),
+            maxNameLength: 30,
+            maxEmailLength: 30,
+            minAge: 18
+        };
+
         let request = {
             body: {
                 name: 'Tim',
@@ -403,9 +410,19 @@ describe('Spy Controller Tests', () => {
         };
 
         let response = {
-            send: sinon.spy(),
-            status: sinon.spy()
+            send: (data) => { },
+            status: (code) => { }
         };
+
+        let stub = sinon.stub(response);
+        stub.status.returns(stub);
+
+        controller.createNewSpy(db, request, stub);
+
+        expect(response.send.calledOnce).to.be.true;
+        expect(response.status.calledOnce).to.be.true;
+        expect(response.status.firstCall.args[0]).to.be.equal(400);
+        expect(response.send.firstCall.args[0].err).to.be.equal('File size exceeded');
     });
 
 

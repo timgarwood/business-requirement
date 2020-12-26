@@ -61,9 +61,15 @@ module.exports = {
 
         // check to ensure that express was able to pull the photo file
         // from the multipart/form-data
-        if (!request.files) {
+        if (!request.files || !request.files.file) {
             return response.status(400)
                 .send({ err: 'A photo is required' });
+        }
+
+        // check for file size over the limit
+        if (request.files.file.truncated) {
+            return response.status(400)
+                .send({ err: 'File size exceeded' });
         }
 
         // create a unique filename for the photo and move it to the public folder
