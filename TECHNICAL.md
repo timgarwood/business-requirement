@@ -9,7 +9,7 @@ The first REST endpoint is a POST method called ```/api/signup```.  The purpose 
 
 On the server, I used an express package called ```express-fileupload``` to parse the file content and write it to the disk. Other alternatives to ```express-fileupload``` are ```multer``` and ```busboy``` but I think ```express-fileupload``` worked fine for what I needed.
 
-To store the images, I could have saved the raw image content directly in the database as a base64 encoded string, but this would make the database file very large.  Instead, I saved the images to the public/ folder and stored the filepath to the photo in the database.  I chose to name the file with ```uid``` instead of the photo filename in case 2 different spies upload the exact same photo.  When the list of spies is retrieved, the model returned to the client just contains a path to ```public/<filename>``` which the client can retrieve.
+To store the images, I could have saved the raw image content directly in the database as a base64 encoded string, but this would make the database file very large.  Instead, I saved the images to the public/ folder and stored the filepath to the photo in the database.  I chose to name the file with ```uuid``` instead of the photo filename in case 2 different spies upload the exact same photo.  When the list of spies is retrieved, the model returned to the client just contains a path to ```public/<uuid>``` which the client can retrieve.
 
 ## Handling Errors
 I categorized errors as either HTTP Bad Request (400) or HTTP Internal Server Error (500).  In each case, I wanted to notify the client that an error had occurred. A simple solution to this is to return a JSON object containing an error message when an error is encountered.
