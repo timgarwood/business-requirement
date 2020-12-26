@@ -213,7 +213,7 @@ export default class App extends Component {
             statusDiv = (
                 <div style={{ textAlign: "center" }}>
                     <p>Please wait</p>
-                    <ClipLoader color={"black"} size={75} loading={this.state.loading}></ClipLoader>
+                    <ClipLoader color={"lime"} size={75} loading={this.state.loading}></ClipLoader>
                 </div>
             );
         }
