@@ -5,7 +5,7 @@ const sinon = require('sinon');
 
 testInvalidEmail = (emailAddress) => {
     let db = {
-        createUser: sinon.spy(),
+        createSpy: sinon.spy(),
         maxNameLength: 30,
         maxEmailLength: 100
     };
@@ -30,9 +30,9 @@ testInvalidEmail = (emailAddress) => {
     let stub = sinon.stub(response);
     stub.status.returns(stub);
 
-    controller.createNewUser(db, request, stub);
+    controller.createNewSpy(db, request, stub);
 
-    expect(db.createUser.calledOnce).to.be.false;
+    expect(db.createSpy.calledOnce).to.be.false;
     expect(stub.status.calledOnce).to.be.true;
     expect(stub.send.calledOnce).to.be.true;
     expect(stub.status.firstCall.args[0]).to.be.equal(400);
@@ -40,9 +40,9 @@ testInvalidEmail = (emailAddress) => {
 }
 
 describe('Spy Controller Tests', () => {
-    it('should create user and return 200 on POST', () => {
+    it('should create spy and return 200 on POST', () => {
         let db = {
-            createUser: sinon.spy()
+            createSpy: sinon.spy()
         };
 
         let request = {
@@ -66,26 +66,26 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
-        expect(db.createUser.calledOnce).to.be.false;
+        expect(db.createSpy.calledOnce).to.be.false;
         expect(stub.status.calledOnce).to.be.false;
 
         request.files.file.mv.firstCall.args[1](null);
 
-        expect(db.createUser.calledOnce).to.be.true;
+        expect(db.createSpy.calledOnce).to.be.true;
         expect(stub.status.calledOnce).to.be.false;
 
         //invoke the database callback
-        db.createUser.firstCall.args[4](null);
+        db.createSpy.firstCall.args[4](null);
 
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.status.firstCall.args[0]).to.be.equal(200);
     });
 
-    it('should return users on GET', () => {
+    it('should return spies on GET', () => {
         const db = {
-            getAllUsers: sinon.spy()
+            getAllSpies: sinon.spy()
         };
 
         const request = {};
@@ -95,13 +95,13 @@ describe('Spy Controller Tests', () => {
             status: sinon.spy()
         };
 
-        controller.getAllUsers(db, response);
+        controller.getAllSpies(db, response);
 
-        expect(db.getAllUsers.calledOnce).to.be.true;
+        expect(db.getAllSpies.calledOnce).to.be.true;
         expect(response.status.calledOnce).to.be.false;
         expect(response.send.calledOnce).to.be.false;
 
-        const users = [
+        const spies = [
             {
                 name: 'user1',
                 emailAddress: 'user1@email.com',
@@ -115,7 +115,7 @@ describe('Spy Controller Tests', () => {
         ]
 
         //invoke the database callback
-        db.getAllUsers.firstCall.args[0](null, users);
+        db.getAllSpies.firstCall.args[0](null, spies);
 
         expect(response.send.calledOnce).to.be.true;
 
@@ -139,7 +139,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 400 when name is too long', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 100
         };
@@ -160,9 +160,9 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
-        expect(db.createUser.calledOnce).to.be.false;
+        expect(db.createSpy.calledOnce).to.be.false;
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.status.firstCall.args[0]).to.be.equal(400);
         expect(stub.send.firstCall.args[0].err).to.be.equal('Name cannot exceed 30 characters');
@@ -171,7 +171,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 400 when email is too long', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30
         };
@@ -192,9 +192,9 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
-        expect(db.createUser.calledOnce).to.be.false;
+        expect(db.createSpy.calledOnce).to.be.false;
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.send.calledOnce).to.be.true;
         expect(stub.status.firstCall.args[0]).to.be.equal(400);
@@ -203,7 +203,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 500 on POST error', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30
         };
@@ -229,16 +229,16 @@ describe('Spy Controller Tests', () => {
         let responseStub = sinon.stub(response);
         responseStub.status.returns(responseStub);
 
-        controller.createNewUser(db, request, responseStub);
-        expect(db.createUser.calledOnce).to.be.false;
+        controller.createNewSpy(db, request, responseStub);
+        expect(db.createSpy.calledOnce).to.be.false;
         expect(responseStub.status.calledOnce).to.be.false;
 
         request.files.file.mv.firstCall.args[1](null);
 
-        expect(db.createUser.calledOnce).to.be.true;
+        expect(db.createSpy.calledOnce).to.be.true;
         expect(responseStub.status.calledOnce).to.be.false;
 
-        db.createUser.firstCall.args[4]({
+        db.createSpy.firstCall.args[4]({
             err: 'something bad happened'
         });
 
@@ -250,7 +250,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 500 when photo cannot be saved', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30
         };
@@ -276,7 +276,7 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
         expect(stub.status.calledOnce).to.be.false;
         expect(stub.send.calledOnce).to.be.false;
@@ -291,7 +291,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 400 when age is NaN', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30
         };
@@ -312,7 +312,7 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.send.calledOnce).to.be.true;
@@ -324,7 +324,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 400 when age is under the minimum', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30,
             minAge: 18
@@ -346,7 +346,7 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.send.calledOnce).to.be.true;
@@ -357,7 +357,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 400 when photo is missing', () => {
         let db = {
-            createUser: sinon.spy(),
+            createSpy: sinon.spy(),
             maxNameLength: 30,
             maxEmailLength: 30,
             minAge: 18
@@ -379,7 +379,7 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.createNewUser(db, request, stub);
+        controller.createNewSpy(db, request, stub);
 
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.send.calledOnce).to.be.true;
@@ -391,7 +391,7 @@ describe('Spy Controller Tests', () => {
 
     it('should return 500 on GET error', () => {
         const db = {
-            getAllUsers: sinon.spy()
+            getAllSpies: sinon.spy()
         };
 
         const request = {};
@@ -404,18 +404,18 @@ describe('Spy Controller Tests', () => {
         let stub = sinon.stub(response);
         stub.status.returns(stub);
 
-        controller.getAllUsers(db, stub);
+        controller.getAllSpies(db, stub);
 
-        expect(db.getAllUsers.calledOnce).to.be.true;
+        expect(db.getAllSpies.calledOnce).to.be.true;
         expect(stub.status.calledOnce).to.be.false;
         expect(stub.send.calledOnce).to.be.false;
 
         //invoke the database callback
-        db.getAllUsers.firstCall.args[0]({ err: 'something bad happened' }, null);
+        db.getAllSpies.firstCall.args[0]({ err: 'something bad happened' }, null);
 
         expect(stub.status.calledOnce).to.be.true;
         expect(stub.send.calledOnce).to.be.true;
         expect(stub.status.firstCall.args[0]).to.be.equal(500);
-        expect(stub.send.firstCall.args[0].err).to.be.equal('An error occurred retrieving the users');
+        expect(stub.send.firstCall.args[0].err).to.be.equal('An error occurred retrieving the spies');
     });
 });
